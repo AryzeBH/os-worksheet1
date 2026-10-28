@@ -33,6 +33,7 @@ nasm -f elf32 -d ELF_TYPE asm_io.asm -o asm_io.o
 gcc -m32 -c driver.c -o driver.o
 gcc -m32 -no-pie driver.o task1.o asm_io.o -o task1
 ./task1
+```
 
 - The expected output would be 21
 ![alt text](image-2.png)
