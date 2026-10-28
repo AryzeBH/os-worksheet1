@@ -13,7 +13,7 @@ This worksheet will explore the 32-bit x86 assembly using NASM and calling assem
 - "Makefile" Will be the build rules.
 - "README" Is this! THe explanations, instructions, and testing.
 
-## Task 1 — Adding Two Integers
+## Task 1 - Adding Two Integers
 
 ### What the program does
 Adds the stored numbers 15 and 6, saves the result and prints 21.
@@ -35,9 +35,9 @@ gcc -m32 -no-pie driver.o task1.o asm_io.o -o task1
 ./task1
 
 - The expected output would be 21
-![alt text](image.png)
+![alt text](image-2.png)
 
-## Task 1_2 — Adding User Input
+## Task 1_2 - Adding User Input
 
 ### What the program does
 Asks the user for two integers, adds them together and displays the result.
