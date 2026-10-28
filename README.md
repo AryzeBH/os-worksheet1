@@ -43,11 +43,11 @@ gcc -m32 -no-pie driver.o task1.o asm_io.o -o task1
 Asks the user for two integers, adds them together and displays the result.
 
 ### How it works
-- Explain how `print_string` displays the prompts.
-- Explain how `read_int` reads a number into EAX.
-- Explain how the two numbers are stored in memory.
-- Explain how `mov` and `add` calculate the sum.
-- Explain how `print_string` and `print_int` display the calculation.
+- **Displaying prompts:** `mov eax, prompt` loads the prompts address into EAX, `call print_string` prints the text until it reaches the terminating zero byte.
+- **Reading input:** `call read_int` reads an integer entered by the user and places its value into EAX.
+- **Storing inputs:** `mov [integer1], eax` stores the first input in memory. `mov [integer2], eax` stores the second. Each variable has four bytes reserved in `.bss`.
+- **Calculating the sum:** `mov eax, [integer1]` loads the first number into EAX. `add eax, [integer2]` adds the second. `mov [result], eax` stores the sum.
+- **Displaying the calculation:** `print_string` prints the messages, while `print_int` prints the numbers loaded into EAX. Putting them together would print the output of the task.
 
 ### How to build and run
 Run these commands inside the `src` folder.
