@@ -35,7 +35,7 @@ gcc -m32 -no-pie driver.o task1.o asm_io.o -o task1
 ```
 
 - The expected output would be 21
-![Task 1 output](screenshots/image-2.png)
+![Task 1 output](screenshots/task1.png)
 
 ## Task 1_2 - Adding User Input
 
@@ -65,4 +65,45 @@ Entering `5` and `7` should display:
 ```text
 The sum of 5 and 7 is: 12
 ```
-![Task 1_2 output](screenshots/image-1.png)
+![Task 1_2 output](screenshots/task1_2.png)
+
+
+## Task 2.1 - Personalised Welcome Message
+
+### What the program does
+Asks the user for their name and a number from 51 to 99. It prints a personalised welcome that many times. Numbers outside this range produce an error message.
+
+### How it works
+- **Displaying prompts:** `print_string` displays the name and number prompts using their addresses in EAX.
+- **Reading the name:** `read_char` reads one character at a time into AL. Each character is stored in `name_buffer`, with ESI tracking its position.
+- **Storing the name:** The buffer reserves 64 bytes. Up to 63 characters are stored, followed by a zero byte so `print_string` knows where the name ends.
+- **Reading the number:** `read_int` reads an integer into EAX, which is then stored in `count`.
+- **Checking the number:** `cmp`, `jle` and `jge` declines values less than OR equal to 50 and greater than OR equal to 100.
+- **Repeating the welcome:** The program prints `"Welcome, "` followed by the name. `dec` reduces the count by one, and `jg` repeats the loop while the count is greater than zero.
+
+### Code example
+
+```nasm
+cmp eax, 50
+jle .invalid_count
+
+cmp eax, 100
+jge .invalid_count
+```
+
+These comparisons ensure that only numbers from 51 to 99 are accepted.
+
+### How to build and run
+Run these commands inside the `src` folder:
+
+```bash
+nasm -f elf32 -d ELF_TYPE asm_io.asm -o asm_io.o
+gcc -m32 -c driver.c -o driver.o
+nasm -f elf32 task2_welcome.asm -o task2_welcome.o
+gcc -m32 -no-pie driver.o task2_welcome.o asm_io.o -o task2_welcome
+./task2_welcome
+```
+
+### Screenshots
+
+![Welcome Input Working](welcome51.png)
