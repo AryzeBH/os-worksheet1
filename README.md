@@ -36,7 +36,7 @@ gcc -m32 -no-pie driver.o task1.o asm_io.o -o task1
 ```
 
 - The expected output would be 21
-![Picture evident of the output](screenshots/image-2.png)
+![Task 1 output](screenshots/image-2.png)
 
 ## Task 1_2 - Adding User Input
 
@@ -66,4 +66,4 @@ Entering `5` and `7` should display:
 ```text
 The sum of 5 and 7 is: 12
 ```
-![Picture evidence of task 1_2 output](screenshots/image-1.png)
+![Task 1_2 output](screenshots/image-1.png)
