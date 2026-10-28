@@ -105,6 +105,7 @@ gcc -m32 -no-pie driver.o task2_welcome.o asm_io.o -o task2_welcome
 ```
 
 ### Screenshots
-
+The first screenshot would be receiving a succesful output of the welcome task.
 ![Welcome Input Working](screenshots/welcome51.png)
+WHere as the second one is evidence of the output giving us an error message.
 ![Welcome Input Error](screenshots/task2error.png)
