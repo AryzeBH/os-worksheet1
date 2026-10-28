@@ -107,3 +107,4 @@ gcc -m32 -no-pie driver.o task2_welcome.o asm_io.o -o task2_welcome
 ### Screenshots
 
 ![Welcome Input Working](screenshots/welcome51.png)
+![Welcome Input Error](screenshots/!task2error.png)
