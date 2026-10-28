@@ -19,10 +19,10 @@ This worksheet will explore the 32-bit x86 assembly using NASM and calling assem
 Adds the stored numbers 15 and 6, saves the result and prints 21.
 
 ### How it works
-- **Where are the numbers and results are stored:** Integer1 and Integer2 are stored in the .data section with the values 15 and 6. The .bss section also reserves four bytes for result and resd 1.
+- **Where are the numbers and results are stored:** ```Integer1``` and ```Integer2``` are stored in the ```.data``` section with the values 15 and 6. The .```bss``` section also reserves four bytes for result and resd 1.
 - **How the sum is calculated:** ```mov eax, [Integer1]``` copies 15 into the EAX register. ```add eax, [integer2]``` adds 6, leaving 21 in EAX and lastly. ```mov [result], eax``` stores that answer in its memory.
-- Explain how `print_int` displays the result.
-- Explain how `driver.c` calls `asm_main`.
+- **How the result is displayed:** ```call print_int``` print the integer currently held within the EAX, which would be 21. ```call print_n1``` would then print a newline
+- ***How C calls the assembly:*** ```driver.c``` declares ```asm_main``` and calls it from its function ```main```. This assembly declartion ```global asm_main``` then makes the function available to all the C drivers when the files are linked. The assembly would then return to the sum of 0 to indicate a successful completion.
 
 ### How to build and run
 Run these commands inside the `src` folder via terminal:
@@ -36,7 +36,7 @@ gcc -m32 -no-pie driver.o task1.o asm_io.o -o task1
 ```
 
 - The expected output would be 21
-![alt text](image-2.png)
+![Picture evident of the output](screenshots/image-2.png)
 
 ## Task 1_2 - Adding User Input
 
@@ -66,4 +66,4 @@ Entering `5` and `7` should display:
 ```text
 The sum of 5 and 7 is: 12
 ```
-![alt text](image-1.png)
+![Picture evidence of task 1_2 output](screenshots/image-1.png)
