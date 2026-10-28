@@ -10,8 +10,7 @@ This worksheet will explore the 32-bit x86 assembly using NASM and calling assem
 ## Repo Structure
 - "Src/" Is the assembly programs, C Driver and supplied I/O files.
 - "screenshots/" Will be the screenshots of the program running and results
-- "Makefile" Will be the build rules.
-- "README" Is this! THe explanations, instructions, and testing.
+- "README" Is this! The explanations, instructions, and testing.
 
 ## Task 1 - Adding Two Integers
 
