@@ -19,8 +19,8 @@ This worksheet will explore the 32-bit x86 assembly using NASM and calling assem
 Adds the stored numbers 15 and 6, saves the result and prints 21.
 
 ### How it works
-- Explain where the two numbers and result are stored.
-- Explain how `mov` and `add` use EAX to calculate the sum.
+- **Where are the numbers and results are stored:** Integer1 and Integer2 are stored in the .data section with the values 15 and 6. The .bss section also reserves four bytes for result and resd 1.
+- **How the sum is calculated:** ```mov eax, [Integer1]``` copies 15 into the EAX register. ```add eax, [integer2]``` adds 6, leaving 21 in EAX and lastly. ```mov [result], eax``` stores that answer in its memory.
 - Explain how `print_int` displays the result.
 - Explain how `driver.c` calls `asm_main`.
 
