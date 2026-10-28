@@ -1,0 +1,6 @@
+# Generated object files
+*.o
+
+# Generated executables
+/src/task1
+/src/task1_2
