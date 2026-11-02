@@ -110,7 +110,7 @@ The first screenshot would be receiving a succesful output of the welcome task.
 WHere as the second one is evidence of the output giving us an error message.
 ![Welcome Input Error](screenshots/task2error.png)
 
-## Task 2.2 — Initialising and Summing an Array
+## Task 2.2 - Initialising and Summing an Array
 
 ### What the program does
 Creates an array which containes the integers 1 to 100, then would add  the stored values together and displays the total amount obtained.
