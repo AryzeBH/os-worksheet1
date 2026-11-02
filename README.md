@@ -1,30 +1,39 @@
 # Operating Systems - Worksheet 1
 
-**Name:** Ben Hicks
-**Student ID:** 25000896
+**Name:** Ben Hicks  
+**Student ID:** 25000896  
 **Module:** UFCFWK-15-2 Operating Systems
 
 ## Overview
-This worksheet will explore the 32-bit x86 assembly using NASM and calling assembly from C, while also implementing conditionals and loops, and building programs with MAke.
+
+For this worksheet, I used NASM to write 32-bit x86 assembly programs and called them through a C driver. The tasks cover input, calculations, loops, conditions and arrays. I also made a Makefile to build all the programs together.
 
 ## Repo Structure
-- "Src/" Is the assembly programs, C Driver and supplied I/O files.
-- "screenshots/" Will be the screenshots of the program running and results
-- "README" Is this! The explanations, instructions, and testing.
+
+- `src/` contains my assembly programs, the C driver and the supplied I/O files.
+- `screenshots/` contains screenshots of the programs running.
+- `Makefile` contains the commands needed to build the programs.
+- `README.md` explains each task and how to run it.
 
 ## Task 1 - Adding Two Integers
 
 ### What the program does
-Adds the stored numbers 15 and 6, saves the result and prints 21.
+
+This program adds 15 and 6, stores the answer and prints 21.
 
 ### How it works
-- **Where are the numbers and results are stored:** ```Integer1``` and ```Integer2``` are stored in the ```.data``` section with the values 15 and 6. The .```bss``` section also reserves four bytes for result and resd 1.
-- **How the sum is calculated:** ```mov eax, [Integer1]``` copies 15 into the EAX register. ```add eax, [integer2]``` adds 6, leaving 21 in EAX and lastly. ```mov [result], eax``` stores that answer in its memory.
-- **How the result is displayed:** ```call print_int``` print the integer currently held within the EAX, which would be 21. ```call print_n1``` would then print a newline
-- ***How C calls the assembly:*** ```driver.c``` declares ```asm_main``` and calls it from its function ```main```. This assembly declartion ```global asm_main``` then makes the function available to all the C drivers when the files are linked. The assembly would then return to the sum of 0 to indicate a successful completion.
+
+- `integer1` and `integer2` hold 15 and 6 in the `.data` section.
+- `result resd 1` reserves four bytes in `.bss` to store the answer.
+- `mov eax, [integer1]` copies the first number into EAX.
+- `add eax, [integer2]` adds the second number, leaving 21 in EAX.
+- `mov [result], eax` saves the answer in memory.
+- `print_int` prints the number in EAX, and `print_nl` adds a new line.
+- `driver.c` calls `asm_main`. The line `global asm_main` makes this function available to the C driver when the files are linked. The function returns 0 to indicate success.
 
 ### How to build and run
-Run these commands inside the `src` folder via terminal:
+
+Run these commands in the `src` folder:
 
 ```bash
 nasm -f elf32 task1.asm -o task1.o
@@ -34,24 +43,29 @@ gcc -m32 -no-pie driver.o task1.o asm_io.o -o task1
 ./task1
 ```
 
-- The expected output would be 21
+### Result
+
+The expected output is 21.
+
 ![Task 1 output](screenshots/task1.png)
 
 ## Task 1_2 - Adding User Input
 
 ### What the program does
-Asks the user for two integers, adds them together and displays the result.
+
+This version asks the user for two numbers instead of using fixed values. It adds them together and prints the calculation.
 
 ### How it works
-- **Displaying prompts:** `mov eax, prompt` loads the prompts address into EAX, `call print_string` prints the text until it reaches the terminating zero byte.
-- **Reading input:** `call read_int` reads an integer entered by the user and places its value into EAX.
-- **Storing inputs:** `mov [integer1], eax` stores the first input in memory. `mov [integer2], eax` stores the second. Each variable has four bytes reserved in `.bss`.
-- **Calculating the sum:** `mov eax, [integer1]` loads the first number into EAX. `add eax, [integer2]` adds the second. `mov [result], eax` stores the sum.
-- **Displaying the calculation:** `print_string` prints the messages, while `print_int` prints the numbers loaded into EAX. Putting them together would print the output of the task.
+
+- `mov eax, prompt` puts the address of the prompt into EAX. `print_string` prints it until it reaches the zero byte at the end.
+- `read_int` reads a number from the user and puts it into EAX.
+- The inputs are saved in `integer1` and `integer2`. Each has four bytes reserved in `.bss`.
+- The first number is loaded into EAX, then `add` adds the second number. The answer is saved in `result`.
+- `print_string` prints the text, while `print_int` prints the numbers and answer.
 
 ### How to build and run
-Run these commands inside the `src` folder.
-These reuse `driver.o` and `asm_io.o` from Task 1.
+
+Run these commands in `src`. This reuses `driver.o` and `asm_io.o` from Task 1.
 
 ```bash
 nasm -f elf32 task1_2.asm -o task1_2.o
@@ -60,26 +74,30 @@ gcc -m32 -no-pie driver.o task1_2.o asm_io.o -o task1_2
 ```
 
 ### Result
-Entering `5` and `7` should display:
+
+Entering 5 and 7 should give:
 
 ```text
 The sum of 5 and 7 is: 12
 ```
-![Task 1_2 output](screenshots/task1_2.png)
 
+![Task 1_2 output](screenshots/task1_2.png)
 
 ## Task 2.1 - Personalised Welcome Message
 
 ### What the program does
-Asks the user for their name and a number from 51 to 99. It prints a personalised welcome that many times. Numbers outside this range produce an error message.
+
+The user enters their name and a number from 51 to 99. The program prints a welcome message that many times. If the number is outside the range, it prints an error.
 
 ### How it works
-- **Displaying prompts:** `print_string` displays the name and number prompts using their addresses in EAX.
-- **Reading the name:** `read_char` reads one character at a time into AL. Each character is stored in `name_buffer`, with ESI tracking its position.
-- **Storing the name:** The buffer reserves 64 bytes. Up to 63 characters are stored, followed by a zero byte so `print_string` knows where the name ends.
-- **Reading the number:** `read_int` reads an integer into EAX, which is then stored in `count`.
-- **Checking the number:** `cmp`, `jle` and `jge` declines values less than OR equal to 50 and greater than OR equal to 100.
-- **Repeating the welcome:** The program prints `"Welcome, "` followed by the name. `dec` reduces the count by one, and `jg` repeats the loop while the count is greater than zero.
+
+- `print_string` displays the prompts.
+- `read_char` reads the name one character at a time into AL, which is the lowest byte of EAX.
+- The characters are stored in `name_buffer`. ESI tracks the position for the next character.
+- The buffer has 64 bytes. It stores up to 63 characters and leaves space for a zero byte at the end.
+- `read_int` reads the number, which is saved in `count`.
+- The comparisons reject numbers of 50 or below and 100 or above.
+- The loop prints `"Welcome, "` followed by the name. `dec` subtracts one from the count each time, and the loop stops when it reaches zero.
 
 ### Code example
 
@@ -91,10 +109,11 @@ cmp eax, 100
 jge .invalid_count
 ```
 
-These comparisons ensure that only numbers from 51 to 99 are accepted.
+These checks only allow numbers from 51 to 99. `jle` means jump if less than or equal, and `jge` means jump if greater than or equal.
 
 ### How to build and run
-Run these commands inside the `src` folder:
+
+Run these commands in `src`:
 
 ```bash
 nasm -f elf32 -d ELF_TYPE asm_io.asm -o asm_io.o
@@ -104,24 +123,30 @@ gcc -m32 -no-pie driver.o task2_welcome.o asm_io.o -o task2_welcome
 ./task2_welcome
 ```
 
-### Screenshots
-The first screenshot would be receiving a succesful output of the welcome task.
+### Results
+
+The first screenshot shows the welcome message working with a valid number.
+
 ![Welcome Input Working](screenshots/welcome51.png)
-WHere as the second one is evidence of the output giving us an error message.
+
+The second shows the error message for an invalid number.
+
 ![Welcome Input Error](screenshots/task2error.png)
 
 ## Task 2.2 - Initialising and Summing an Array
 
 ### What the program does
-Creates an array which containes the integers 1 to 100, then would add  the stored values together and displays the total amount obtained.
+
+I made an array that stores the numbers 1 to 100. Another loop adds the stored numbers together and prints the total.
 
 ### How it works
-- **Reserving memory:** `numbers resd ARRAY_SIZE` reserves space for 100 four-byte integers in `.bss`.
-- **Filling the array:** The first loop stores the values 1 to 100. EAX holds the value being stored, while ESI holds the array index.
-- **Accessing elements:** `[numbers + esi*4]` accesses an array element. The index is multiplied by four because each integer occupies four bytes.
-- **Calculating the sum:** The second loop reads each array element and adds it to EAX, which starts at zero.
-- **Controlling the loops:** `inc esi` advances the index. `cmp` and `jl` repeat each loop while ESI is less than 100.
-- **Displaying the result:** The total is saved in `result`. `print_string` displays the message, and `print_int` displays the total.
+
+- `numbers resd ARRAY_SIZE` reserves space for 100 four-byte integers in `.bss`.
+- The first loop fills the array. EAX holds the number being stored, while ESI holds the array index.
+- `[numbers + esi*4]` accesses an element. The index is multiplied by four because each integer takes up four bytes.
+- The second loop starts EAX at zero and adds each array element to it.
+- `inc esi` moves to the next index. The loop continues while ESI is below 100.
+- The answer is saved in `result` and printed with `print_int`.
 
 ### Code example
 
@@ -133,10 +158,11 @@ cmp esi, ARRAY_SIZE
 jl .sum_array
 ```
 
-This adds the current array element to EAX and moves to the next element. The loop processes indexes 0 to 99.
+This adds one element to the total and moves to the next. The array indexes run from 0 to 99.
 
 ### How to build and run
-Run these commands inside the `src` folder:
+
+Run these commands in `src`:
 
 ```bash
 nasm -f elf32 -d ELF_TYPE asm_io.asm -o asm_io.o
@@ -147,39 +173,38 @@ gcc -m32 -no-pie driver.o task2_array.o asm_io.o -o task2_array
 ```
 
 ### Result
-Expected output:
+
+The expected total was 5050, which matched my output.
 
 ```text
 The sum of 1 to 100 is: 5050
 ```
-
-Actual result: 5050
-
-### Screenshot
 
 ![Array sum program running](screenshots/task2_array.png)
 
 ## Task 2.3 - Summing a Selected Range
 
 ### What the program does
-Creates an array containing the integers 1 to 100. The user enters a start and end value, and the program sums that range, including both endpoints. Invalid ranges display an error.
+
+This extends the array program by letting the user choose a start and end value. It adds the numbers in that range, including both endpoints. Invalid ranges give an error.
 
 ### How it works
-- **Creating the array:** A loop stores the values 1 to 100 in `numbers`.
-- **Reading the range:** `print_string` displays each prompt. `read_int` reads the inputs, which are stored in `range_start` and `range_end`.
-- **Validating input:** Comparisons check that both values are between 1 and 100, and that the end is greater than or equal to the start.
-- **Finding the starting index:** Array indexes begin at zero, so the program subtracts one from the starting value. For example, the value 10 is stored at index 9.
-- **Summing the range:** The loop adds each selected array element to EAX, including the ending value.
-- **Displaying the result:** The sum is stored in `result`, then printed using `print_int`. Invalid ranges display `error_msg` instead.
 
-### Code example
+- A loop fills the array with the numbers 1 to 100.
+- The user enters two numbers, which are saved in `range_start` and `range_end`.
+- The program checks that both numbers are between 1 and 100. It also checks that the end is not below the start.
+- Array indexes start at zero, so the program subtracts one from the starting value to find its index.
+- A loop adds the selected array elements to EAX.
+- The total is saved in `result` and printed. If a check fails, the program prints the error message instead.
+
+### Code examples
 
 ```nasm
 mov esi, [range_start]
 dec esi
 ```
 
-This converts the starting value into a zero-based array index.
+This finds the starting index. For example, the number 10 is stored at index 9.
 
 ```nasm
 .sum_range:
@@ -190,10 +215,11 @@ This converts the starting value into a zero-based array index.
     jl .sum_range
 ```
 
-This loop adds the selected elements. Multiplying ESI by four locates each four-byte integer in memory.
+The loop adds each number in the range, including the ending value.
 
 ### How to build and run
-Run these commands inside the `src` folder:
+
+Run these commands in `src`:
 
 ```bash
 nasm -f elf32 -d ELF_TYPE asm_io.asm -o asm_io.o
@@ -203,25 +229,26 @@ gcc -m32 -no-pie driver.o task2_range.o asm_io.o -o task2_range
 ./task2_range
 ```
 
-### Screenshots
+### Screenshot
 
 ![Range sum with valid input](screenshots/task2_range.png)
 
 ## Task 3 - Building with Make
 
 ### What the Makefile does
-Builds all five worksheet programs using one command: `make`. It also gives a `clean` which would remove the generated files made from `make`
+
+The Makefile builds all five programs using `make`. I can also use `make clean` to remove the generated object files and executables.
 
 ### How it works
-- **Variables:** `NASM` and `CC` specify the assembler and C compiler. `PROGRAMS` lists the five programs.
-- **Default target:** `all` is the first target and builds every program.
-- **Targets and prerequisites:** Each rule identifies an output file and the files it depends on.
-- **Recipes:** Commands beneath each rule assemble, compile or link the required files.
-- **Pattern rules:** `%` matches program names, allowing the same rule to build different assembly files.
-- **Automatic variables:** `$<` represents the first prerequisite, `$@` represents the target, and `$^` represents all prerequisites.
-- **Incremental builds:** Make uses file modification times to rebuild targets when their prerequisites have changed.
-- **Cleaning:** `make clean` removes object files and executables without deleting source files.
-- **Phony targets:** `.PHONY` identifies `all` and `clean` as actions rather than files.
+
+- `NASM` and `CC` specify the assembler and compiler. `PROGRAMS` lists the programs to build.
+- `all` is the first target, so running `make` builds everything by default.
+- Each rule has a target, prerequisites and a recipe. These are the output, the files it needs and the commands used to build it.
+- `%` matches different program names, so I do not need a separate assembly rule for every program.
+- `$<` means the first prerequisite, `$@` means the target and `$^` means all prerequisites.
+- Make checks file modification times to decide what needs rebuilding.
+- `make clean` removes the build files and keeps the source code.
+- `.PHONY` tells Make that `all` and `clean` are actions rather than actual files.
 
 ### Code example
 
@@ -230,10 +257,11 @@ src/%.o: src/%.asm src/asm_io.inc
 	$(NASM) -f elf32 -I src/ $< -o $@
 ```
 
-This rule assembles a source file into a 32-bit object file. The `-I src/` option tells NASM where to find the included support file. Changes to `asm_io.inc` also cause the affected object files to be rebuilt.
+This turns an assembly source file into a 32-bit object file. `-I src/` tells NASM where to find `asm_io.inc`. The include file is also a prerequisite, so changing it causes the affected object files to be rebuilt.
 
 ### How to build and run
-Run these commands from the main repository folder:
+
+Run these commands from the main repo folder:
 
 ```bash
 make clean
@@ -241,21 +269,18 @@ make
 ./src/task2_array
 ```
 
-The array program should display:
+The array program should print:
 
 ```text
 The sum of 1 to 100 is: 5050
 ```
 
-Run Make again without changing any source files:
+Running `make` again without changing any files should report that nothing needs doing.
 
 ```bash
 make
 ```
 
-It should then report that nothing needs doing due to the fact everything is up to date.
-
-
-### Screenshots
+### Screenshot
 
 ![Make building all programs](screenshots/make_build.png)
