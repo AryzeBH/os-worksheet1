@@ -158,3 +158,104 @@ Actual result: 5050
 ### Screenshot
 
 ![Array sum program running](screenshots/task2_array.png)
+
+## Task 2.3 - Summing a Selected Range
+
+### What the program does
+Creates an array containing the integers 1 to 100. The user enters a start and end value, and the program sums that range, including both endpoints. Invalid ranges display an error.
+
+### How it works
+- **Creating the array:** A loop stores the values 1 to 100 in `numbers`.
+- **Reading the range:** `print_string` displays each prompt. `read_int` reads the inputs, which are stored in `range_start` and `range_end`.
+- **Validating input:** Comparisons check that both values are between 1 and 100, and that the end is greater than or equal to the start.
+- **Finding the starting index:** Array indexes begin at zero, so the program subtracts one from the starting value. For example, the value 10 is stored at index 9.
+- **Summing the range:** The loop adds each selected array element to EAX, including the ending value.
+- **Displaying the result:** The sum is stored in `result`, then printed using `print_int`. Invalid ranges display `error_msg` instead.
+
+### Code example
+
+```nasm
+mov esi, [range_start]
+dec esi
+```
+
+This converts the starting value into a zero-based array index.
+
+```nasm
+.sum_range:
+    add eax, [numbers + esi*4]
+    inc esi
+
+    cmp esi, [range_end]
+    jl .sum_range
+```
+
+This loop adds the selected elements. Multiplying ESI by four locates each four-byte integer in memory.
+
+### How to build and run
+Run these commands inside the `src` folder:
+
+```bash
+nasm -f elf32 -d ELF_TYPE asm_io.asm -o asm_io.o
+gcc -m32 -c driver.c -o driver.o
+nasm -f elf32 task2_range.asm -o task2_range.o
+gcc -m32 -no-pie driver.o task2_range.o asm_io.o -o task2_range
+./task2_range
+```
+
+### Screenshots
+
+![Range sum with valid input](screenshots/task2_range.png)
+
+## Task 3 - Building with Make
+
+### What the Makefile does
+Builds all five worksheet programs using one command: `make`. It also gives a `clean` which would remove the generated files made from `make`
+
+### How it works
+- **Variables:** `NASM` and `CC` specify the assembler and C compiler. `PROGRAMS` lists the five programs.
+- **Default target:** `all` is the first target and builds every program.
+- **Targets and prerequisites:** Each rule identifies an output file and the files it depends on.
+- **Recipes:** Commands beneath each rule assemble, compile or link the required files.
+- **Pattern rules:** `%` matches program names, allowing the same rule to build different assembly files.
+- **Automatic variables:** `$<` represents the first prerequisite, `$@` represents the target, and `$^` represents all prerequisites.
+- **Incremental builds:** Make uses file modification times to rebuild targets when their prerequisites have changed.
+- **Cleaning:** `make clean` removes object files and executables without deleting source files.
+- **Phony targets:** `.PHONY` identifies `all` and `clean` as actions rather than files.
+
+### Code example
+
+```makefile
+src/%.o: src/%.asm src/asm_io.inc
+	$(NASM) -f elf32 -I src/ $< -o $@
+```
+
+This rule assembles a source file into a 32-bit object file. The `-I src/` option tells NASM where to find the included support file. Changes to `asm_io.inc` also cause the affected object files to be rebuilt.
+
+### How to build and run
+Run these commands from the main repository folder:
+
+```bash
+make clean
+make
+./src/task2_array
+```
+
+The array program should display:
+
+```text
+The sum of 1 to 100 is: 5050
+```
+
+Run Make again without changing any source files:
+
+```bash
+make
+```
+
+It should then report that nothing needs doing due to the fact everything is up to date.
+
+
+### Screenshots
+
+![Make building all programs](screenshots/make_build.png)
