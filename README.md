@@ -109,3 +109,52 @@ The first screenshot would be receiving a succesful output of the welcome task.
 ![Welcome Input Working](screenshots/welcome51.png)
 WHere as the second one is evidence of the output giving us an error message.
 ![Welcome Input Error](screenshots/task2error.png)
+
+## Task 2.2 — Initialising and Summing an Array
+
+### What the program does
+Creates an array which containes the integers 1 to 100, then would add  the stored values together and displays the total amount obtained.
+
+### How it works
+- **Reserving memory:** `numbers resd ARRAY_SIZE` reserves space for 100 four-byte integers in `.bss`.
+- **Filling the array:** The first loop stores the values 1 to 100. EAX holds the value being stored, while ESI holds the array index.
+- **Accessing elements:** `[numbers + esi*4]` accesses an array element. The index is multiplied by four because each integer occupies four bytes.
+- **Calculating the sum:** The second loop reads each array element and adds it to EAX, which starts at zero.
+- **Controlling the loops:** `inc esi` advances the index. `cmp` and `jl` repeat each loop while ESI is less than 100.
+- **Displaying the result:** The total is saved in `result`. `print_string` displays the message, and `print_int` displays the total.
+
+### Code example
+
+```nasm
+add eax, [numbers + esi*4]
+inc esi
+
+cmp esi, ARRAY_SIZE
+jl .sum_array
+```
+
+This adds the current array element to EAX and moves to the next element. The loop processes indexes 0 to 99.
+
+### How to build and run
+Run these commands inside the `src` folder:
+
+```bash
+nasm -f elf32 -d ELF_TYPE asm_io.asm -o asm_io.o
+gcc -m32 -c driver.c -o driver.o
+nasm -f elf32 task2_array.asm -o task2_array.o
+gcc -m32 -no-pie driver.o task2_array.o asm_io.o -o task2_array
+./task2_array
+```
+
+### Result
+Expected output:
+
+```text
+The sum of 1 to 100 is: 5050
+```
+
+Actual result: 5050
+
+### Screenshot
+
+![Array sum program running](screenshots/task2_array.png)
